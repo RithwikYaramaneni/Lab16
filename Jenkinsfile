@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Ensures Maven, Docker, and system binaries are in PATH on macOS
         PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${env.PATH}"
     }
 
@@ -27,10 +26,10 @@ pipeline {
         stage('Run Container') {
             steps {
                 echo 'Running Docker container...'
-                // Stop and remove existing container if running
                 sh 'docker stop test-container || true'
                 sh 'docker rm test-container || true'
-                sh 'docker run -d --name test-container -p 8080:8080 java-docker-app:${BUILD_NUMBER}'
+                // Maps host port 8081 to container port 8080
+                sh 'docker run -d --name test-container -p 8081:8080 java-docker-app:${BUILD_NUMBER}'
             }
         }
     }
